@@ -20,7 +20,9 @@ function App() {
   }, [setTheme]);
 
   return (
-    <div className={`${theme === "light" ? "bg-[#F8F8FB]" : "bg-[#141625]"}`}>
+    <div
+      className={`${theme === "light" ? "bg-[#F8F8FB]" : "bg-[#141625]"} h-dvh`}
+    >
       <Routes>
         <Route
           path="/"

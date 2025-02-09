@@ -8,3 +8,7 @@ body {
     max-width: 1220px;
     margin: 0 auto;
 }
+
+.overflow-x-scroll::-webkit-scrollbar {
+    display: none;
+}

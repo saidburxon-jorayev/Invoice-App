@@ -49,13 +49,13 @@ function Invoices() {
               Draft
             </option>
           </select>
-          <button className="active:scale-90 transition-all flex items-center p-[6px] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer">
+          <button className="active:scale-90 transition-all xl:content-[Invoice] flex items-center p-[6px] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer">
             <img src={Add} alt="add" />
-            New
+            New Invoice
           </button>
         </div>
       </div>
-      {/* <InvoiceCard /> */}
+      <InvoiceCard />
     </div>
   );
 }

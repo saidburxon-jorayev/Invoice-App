@@ -21,7 +21,9 @@ function App() {
 
   return (
     <div
-      className={`${theme === "light" ? "bg-[#F8F8FB]" : "bg-[#141625]"} h-dvh`}
+      className={`${
+        theme === "light" ? "bg-[#F8F8FB]" : "bg-[#141625]"
+      } min-h-svh`}
     >
       <Routes>
         <Route

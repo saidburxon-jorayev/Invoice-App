@@ -68,6 +68,44 @@ function Invoices() {
 
       {db.length == 0 && (
         <div className="flex flex-col items-center justify-center text-center">
+          <div className="top-content">
+            <div className="flex items-end justify-between xl:gap-[267px]">
+              <div className="mt-[34px] pl-[24px]">
+                <h1
+                  className={`${
+                    theme == "dark" ? "text-white" : "text-black"
+                  } font-bold text-[30px] xl:text-[32px]`}
+                >
+                  Invoices
+                </h1>
+                <p
+                  className={`${
+                    theme == "dark" ? "text-[#DFE3FA]" : "text-[#888EB0]"
+                  } font-normal mt-[4px]`}
+                >
+                  {data.length} invoices
+                </p>
+              </div>
+              <div className="flex items-center mb-[10px] gap-[18px] pr-[24px]">
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className={`${
+                    theme == "dark" ? "bg-[#141625] text-white" : "bg-[#F8F8FB]"
+                  } outline-0 font-bold cursor-pointer`}
+                >
+                  <option value="filter">Filter</option>
+                  <option value="paid">Paid</option>
+                  <option value="pending">Pending</option>
+                  <option value="draft">Draft</option>
+                </select>
+                <button className="truncate active:scale-90 transition-all flex items-center p-[6px] hover:bg-[#9277FF] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer">
+                  <img src={Add} alt="add" />
+                  New Invoice
+                </button>
+              </div>
+            </div>
+          </div>
           <img src={NotFound} className="mt-[210px]" alt="notfound" />
           <div className="text-center">
             <h1

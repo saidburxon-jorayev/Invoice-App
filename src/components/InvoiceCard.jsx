@@ -63,16 +63,20 @@ function InvoiceCard(props) {
                 props.invoice.status == "paid"
                   ? "bg-[#33D69F]"
                   : props.invoice.status == "draft"
-                  ? "bg-[#fff]"
+                  ? theme == "dark"
+                    ? "bg-[#fff]"
+                    : "bg-[#373B53]"
                   : "bg-[#FF8F00]"
-              } `}
+              } ${theme == "dark" ? "text-white" : "text-black"} `}
             ></div>
             <h2
               className={`${
                 props.invoice.status == "paid"
                   ? "text-[#33D69F]"
                   : props.invoice.status == "draft"
-                  ? "text-[#fff]"
+                  ? theme == "dark"
+                    ? "text-[#fff]"
+                    : "text-black"
                   : "text-[#FF8F00]"
               } text-sm`}
             >

@@ -53,7 +53,7 @@ function Invoices() {
               </select>
               <button className="truncate active:scale-90 transition-all flex items-center p-[6px] hover:bg-[#9277FF] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer">
                 <img src={Add} alt="add" />
-                New Invoice
+                New
               </button>
             </div>
           </div>
@@ -101,7 +101,7 @@ function Invoices() {
                 </select>
                 <button className="truncate active:scale-90 transition-all flex items-center p-[6px] hover:bg-[#9277FF] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer">
                   <img src={Add} alt="add" />
-                  New Invoice
+                  New
                 </button>
               </div>
             </div>

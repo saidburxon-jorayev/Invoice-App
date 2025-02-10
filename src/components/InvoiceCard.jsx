@@ -8,7 +8,7 @@ function InvoiceCard(props) {
   const navigate = useNavigate();
 
   function handleRedirect(id) {
-    navigate(`/${id}`);
+    navigate(`/${id}`, { state: { invoice: props.invoice } });
   }
 
   return (

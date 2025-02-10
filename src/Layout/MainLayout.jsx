@@ -35,10 +35,8 @@ function MainLayout({ children }) {
     <>
       <div className="xl:flex">
         <div
-          className={`sm:flex flex justify-between sm:items-center sm:justify-between xl:flex-col xl:w-[103px] xl:h-dvh xl:rounded-r-[20px] ${
-            localStorage.getItem("theme") == "light"
-              ? "bg-[#373B53]"
-              : "bg-[#1E2139]"
+          className={`sm:flex flex justify-between sm:items-center sm:justify-between xl:flex-col xl:w-[103px] xl:fixed xl:left-0 xl:bottom-0 xl:top-0 xl:rounded-r-[20px] ${
+            theme == "light" ? "bg-[#373B53]" : "bg-[#1E2139]"
           }`}
         >
           <div className="image">

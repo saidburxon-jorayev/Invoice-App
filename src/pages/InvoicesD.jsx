@@ -24,7 +24,7 @@ function InvoicesD() {
       <div
         className={`flex ${
           theme == "dark" ? "bg-[#1E2139]" : "bg-[#FFFFFF]"
-        } items-center pl-[24px] min-w-[327px] h-[91px] justify-between rounded-[8px] px-[24px] mt-[32px]`}
+        } items-center pl-[24px] min-w-[327px] h-[91px] justify-between rounded-[8px] xl:w-[730px] px-[24px] mt-[32px]`}
       >
         <p
           className={`${theme == "dark" ? "text-[#DFE3FA]" : "text-[#858BB2]"}`}
@@ -80,7 +80,7 @@ function InvoicesD() {
             <p
               className={`${
                 theme == "dark" ? "text-[#7E88C3]" : "text-[#7E88C3]"
-              } font-bold text-[12px]`}
+              } font-bold text-[12px] xl:text-[16px]`}
             >
               #
               <span
@@ -108,8 +108,10 @@ function InvoicesD() {
             </p>
           </div>
         </div>
-        <div className="infos">
-          <div className={`mt-[31px] flex items-center justify-between`}>
+        <div className="xl:flex xl:items-center xl:gap-[100px]">
+          <div
+            className={`mt-[31px] xl:gap-[100px] flex items-center justify-between`}
+          >
             <div className="date-and-due">
               <div className="date">
                 <p
@@ -184,14 +186,97 @@ function InvoicesD() {
                 theme == "dark" ? "text-white" : "text-[#0C0E16]"
               } font-bold text-[15px]`}
             >
-              alexgrim@mail.com
+              {invoice.clientEmail
+                ? invoice.clientEmail
+                : "This user don't have email"}
             </h2>
+          </div>
+        </div>
+        <div
+          className={`${
+            theme == "dark" ? "bg-[#252945]" : "bg-[#F9FAFE]"
+          } rounded-[8px]`}
+        >
+          <div className={`mt-[40px]`}>
+            {invoice.items.length &&
+              invoice.items.map(function (value, index) {
+                return (
+                  <div
+                    key={index}
+                    className="p-[24px] flex items-center justify-between"
+                  >
+                    <div className="designer">
+                      <h2
+                        className={`${
+                          theme == "dark" ? "text-white" : "text-[#0C0E16]"
+                        } font-bold text-[12px] mb-[4px]`}
+                      >
+                        {value.name}
+                      </h2>
+                      <p
+                        className={`${
+                          theme == "dark" ? "text-[#888EB0]" : "text-[#7E88C3]"
+                        } font-bold text-[12px]`}
+                      >
+                        {value.quantity} x £ {value.price}
+                      </p>
+                    </div>
+
+                    <div className="price">
+                      <h2
+                        className={`${
+                          theme == "dark" ? "text-white" : "text-[#0C0E16]"
+                        } font-bold text-[12px]`}
+                      >
+                        £ {value.total.toFixed(2)}
+                      </h2>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+
+          <div
+            className={`${
+              theme == "dark" ? "bg-[#0C0E16]" : "bg-[#373B53]"
+            } rounded-b-[8px] flex items-center justify-between p-[24px]`}
+          >
+            <div className="content">
+              <h2 className={`text-white font-normal text-[11px]}`}>
+                Amount Due
+              </h2>
+            </div>
+            <div className="due">
+              <h2 className={`text-white font-bold text-[20px]`}>
+                £ {invoice.total.toFixed(2)}
+              </h2>
+            </div>
           </div>
         </div>
       </div>
       <div
-        className={`${theme == "dark" ? "bg-[#252945]" : "bg-[#F9FAFE]"}`}
-      ></div>
+        className={`pb-[32px] ${
+          theme == "dark" ? "bg-[#1E2139]" : "bg-[#FFFFFF]"
+        } mt-[56px] py-[21px] flex items-center rounded-[8px] justify-between`}
+      >
+        <button
+          className={`${
+            theme == "dark"
+              ? "text-[#DFE3FA] bg-[#252945] "
+              : "text-[#7E88C3] bg-[#F9FAFE]"
+          } px-[23px] cursor-pointer  py-[17px] rounded-[24px] font-bold text-12px`}
+        >
+          Edit
+        </button>
+        <button
+          className={`px-[23px] cursor-pointer hover:bg-[#FF9797] py-[17px] rounded-[24px] font-bold text-12px bg-[#EC5757] text-white`}
+        >
+          Delete
+        </button>
+        <button className="px-[23px] cursor-pointer py-[17px] rounded-[24px] font-bold text-12px hover:bg-[#9277FF] bg-[#7C5DFA] text-white">
+          Mark as Paid
+        </button>
+      </div>
     </div>
   );
 }

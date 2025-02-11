@@ -1,14 +1,66 @@
 @import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap");
 body {
-    font-family: "League Spartan", serif;
+  font-family: "League Spartan", serif;
 }
 
 .contma {
-    max-width: 1220px;
-    margin: 0 auto;
+  max-width: 1220px;
+  margin: 0 auto;
 }
 
 .overflow-x-scroll::-webkit-scrollbar {
-    display: none;
+  display: none;
+}
+
+.animation-top {
+  animation: slide-top 0.5s alternate;
+}
+
+@keyframes slide-top {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.animation {
+  animation: slide 1s alternate;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateY(500%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.animation-left {
+  animation: slide-left 1s alternate;
+}
+
+@keyframes slide-left {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animation-right {
+  animation: slide-right 1s alternate;
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
 }

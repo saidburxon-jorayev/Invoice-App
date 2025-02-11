@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 function InvoiceCard(props) {
   const { theme } = useThemeStore();
-  console.log(props.invoice);
   const navigate = useNavigate();
 
   function handleRedirect(id) {
@@ -14,14 +13,14 @@ function InvoiceCard(props) {
   return (
     <div
       onClick={() => handleRedirect(props.invoice.id)}
-      className="px-4 sm:px-6 mt-4 flex flex-col gap-[16px]"
+      className={`transition-all hover:-translate-2 sm:px-6 mt-4 flex flex-col gap-[16px]`}
     >
       <div
         className={`${
           theme === "dark"
             ? "text-white shadow-md bg-[#1E2139]"
             : "text-black drop-shadow-md bg-white"
-        } sm:w-full rounded-lg p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 cursor-pointer hover:drop-shadow-lg transition-all`}
+        } sm:w-full rounded-lg p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 cursor-pointer hover:drop-shadow-lg transition-all animation`}
       >
         <div className="flex justify-between items-center sm:justify-start sm:gap-8 w-full sm:w-auto">
           <h2 className="font-extrabold text-sm">

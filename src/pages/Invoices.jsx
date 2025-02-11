@@ -5,8 +5,10 @@ import InvoiceCard from "../components/InvoiceCard";
 import db from "../assets/data.json";
 import NotFound from "../images/not-found.svg";
 import useDeleteStore from "../store/useDeleteStore";
+import AddInvoice from "../components/AddInvoice";
 
 function Invoices() {
+  const [add, setAdd] = useState(false);
   const [filter, setFilter] = useState("filter");
   const { theme, setTheme } = useThemeStore();
   const { invoices } = useDeleteStore();
@@ -21,7 +23,7 @@ function Invoices() {
   }, [filter]);
 
   return (
-    <div className="contma">
+    <div className="contma relative">
       {invoices.length > 0 && (
         <div>
           <div className="flex items-end justify-between xl:gap-[267px]">
@@ -54,7 +56,10 @@ function Invoices() {
                 <option value="pending">Pending</option>
                 <option value="draft">Draft</option>
               </select>
-              <button className="truncate active:scale-90 transition-all flex items-center p-[6px] hover:bg-[#9277FF] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer">
+              <button
+                onClick={() => setAdd(true)}
+                className="truncate active:scale-90 transition-all flex items-center p-[6px] hover:bg-[#9277FF] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer"
+              >
                 <img src={Add} alt="add" />
                 New <span className="hidden sm:block">Invoice</span>
               </button>
@@ -136,6 +141,14 @@ function Invoices() {
             </p>
           </div>
         </div>
+      )}
+      {add && (
+        <AddInvoice
+          add={add}
+          onClose={() => {
+            setAdd(false);
+          }}
+        />
       )}
     </div>
   );

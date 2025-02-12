@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import useThemeStore from "../store/useThemeStore";
 import { ChevronDown } from "lucide-react";
+import { Toaster, toast } from "sonner";
+import Trash from "../images/trash-can.svg";
+import useAddStore from "../store/useAddStore";
 
 function AddInvoice({ add, onClose }) {
+  const [item, setItem] = useState([]);
   const { theme } = useThemeStore();
-
+  const { addInvoice, invoices } = useAddStore();
   const [isClosing, setIsClosing] = useState(false);
+
+  const error = (text) => {
+    toast.error(text);
+  };
 
   useEffect(() => {
     if (add) {
@@ -13,13 +21,101 @@ function AddInvoice({ add, onClose }) {
     }
   }, [add]);
 
+  function validate() {
+    if (formData.senderStreet.length <= 10) {
+      error("Street Address 10ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderCity.length < 4) {
+      error("City Address 4ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderPostCode.length < 6) {
+      error("Post Code 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderCountry.length <= 3) {
+      error("Country 3ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientName.length <= 2) {
+      error("Client Name 3ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientEmail.length < 11) {
+      error("Client Email 11ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientStreet.length <= 10) {
+      error("Street Address 10ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientCity.length <= 3) {
+      error("City 3ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientPostCode.length < 6) {
+      error("Post Code 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientCountry.length < 2) {
+      error("Country 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderPostCode.length < 6) {
+      error("Post Code 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.description.length < 15) {
+      error("Description 15ta belgidan kam!");
+      return false;
+    }
+    if (formData.invoiceDate.length != 10) {
+      error("Iltimos Invoice Date kiriting!");
+      return false;
+    }
+    return true;
+  }
+
+  function generateId() {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "12345678910";
+    let id = "";
+
+    for (let i = 0; i < 6; i++) {
+      if (Math.random() < 0.5) {
+        id += letters[Math.floor(Math.random() * letters.length)];
+      } else {
+        id += numbers[Math.floor(Math.random() * numbers.length)];
+      }
+    }
+
+    return id;
+  }
+
+  function handleDeleteItem(id) {
+    setItem(item.filter((prev) => prev.id != id));
+  }
+
   function handleClose() {
     setIsClosing(true);
     setTimeout(onClose, 300);
   }
 
+  function AddNewItem() {
+    setItem([...item, { name: "", qty: "", price: "", id: Date.now() }]);
+  }
+
+  function handleItemChange(id, field, value) {
+    setItem((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
+  }
+
   const [formData, setFormData] = useState({
-    id: Date.now(),
+    id: generateId(),
     senderStreet: "",
     senderCity: "",
     senderPostCode: "",
@@ -34,6 +130,56 @@ function AddInvoice({ add, onClose }) {
     paymentTerms: "1",
     description: "",
   });
+  function postInvoice() {
+    const isValid = validate();
+    if (!isValid) {
+      return;
+    }
+
+    const invoiceDate = new Date(formData.invoiceDate);
+    const paymentDue = new Date(invoiceDate);
+    paymentDue.setDate(paymentDue.getDate() + parseInt(formData.paymentTerms));
+
+    const itemsTotal = item.reduce(
+      (sum, item) => sum + item.qty * item.price,
+      0
+    );
+
+    const transformedData = {
+      id: formData.id,
+      createdAt: formData.invoiceDate,
+      paymentDue: paymentDue,
+      description: formData.description,
+      paymentTerms: parseInt(formData.paymentTerms),
+      clientName: formData.clientName,
+      clientEmail: formData.clientEmail,
+      status: "pending",
+      senderAddress: {
+        street: formData.senderStreet,
+        city: formData.senderCity,
+        postCode: formData.senderPostCode,
+        country: formData.senderCountry,
+      },
+      clientAddress: {
+        street: formData.clientStreet,
+        city: formData.clientCity,
+        postCode: formData.clientPostCode,
+        country: formData.clientCountry,
+      },
+      items: item.map((item) => ({
+        name: item.name,
+        quantity: item.qty,
+        price: item.price,
+        total: item.qty * item.price,
+      })),
+      total: itemsTotal,
+    };
+
+    addInvoice(transformedData);
+    console.log(transformedData);
+    console.log(invoices);
+    console.log(generateId());
+  }
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -56,7 +202,6 @@ function AddInvoice({ add, onClose }) {
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
-
       <div
         className={`fixed left-0 top-0 h-full w-full md:w-[616px] lg:w-[720px] transform transition-all duration-300 ease-in-out
           ${!isClosing ? "translate-x-0" : "-translate-x-full"}
@@ -71,13 +216,7 @@ function AddInvoice({ add, onClose }) {
             New Invoice
           </h1>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log(formData);
-            }}
-            className="flex-1 overflow-y-auto space-y-6 md:space-y-8"
-          >
+          <form className="flex-1 overflow-y-auto space-y-6 md:space-y-8">
             <div>
               <p className="text-[#7C5DFA] font-bold text-xs md:text-sm mb-6">
                 Bill From
@@ -250,14 +389,108 @@ function AddInvoice({ add, onClose }) {
               >
                 Item List
               </h2>
+
+              {item.length > 0 &&
+                item.map((value) => {
+                  return (
+                    <div key={value.id} className="mb-[48px]">
+                      <div className="flex flex-col flex-wrap">
+                        <div className="flex flex-col">
+                          <label className={getLabelClass()} htmlFor="item">
+                            Item Name
+                          </label>
+                          <input
+                            type="text"
+                            value={value.name}
+                            onChange={(e) =>
+                              handleItemChange(value.id, "name", e.target.value)
+                            }
+                            className={getInputClass()}
+                            id="item"
+                            placeholder="Item Name"
+                          />
+                        </div>
+                        <div className="flex gap-[16px] flex-wrap">
+                          <div className="qty">
+                            <label
+                              className={`${getLabelClass()} mt-[24px]`}
+                              htmlFor="qty"
+                            >
+                              Qty.
+                            </label>
+                            <input
+                              type="number"
+                              value={value.qty}
+                              onChange={(e) =>
+                                handleItemChange(
+                                  value.id,
+                                  "qty",
+                                  Number(e.target.value)
+                                )
+                              }
+                              className={getInputClass()}
+                              id="qty"
+                              placeholder="Item Qty."
+                            />
+                          </div>
+                          <div className="price">
+                            <label
+                              className={`${getLabelClass()} mt-[24px]`}
+                              htmlFor="price"
+                            >
+                              Price
+                            </label>
+                            <input
+                              type="number"
+                              value={value.price}
+                              onChange={(e) =>
+                                handleItemChange(
+                                  value.id,
+                                  "price",
+                                  Number(e.target.value)
+                                )
+                              }
+                              className={getInputClass()}
+                              id="price"
+                              placeholder="Item Price"
+                            />
+                          </div>
+                          <div className="total">
+                            <label
+                              className={`${getLabelClass()} mt-[24px]`}
+                              htmlFor="item"
+                            >
+                              Total
+                            </label>
+                            <p
+                              className={`${getLabelClass()} mt-[27px] truncate`}
+                            >
+                              {(value.qty * value.price).toFixed(2)}
+                            </p>
+                          </div>
+                          <div className="delete">
+                            <img
+                              onClick={() => handleDeleteItem(value.id)}
+                              className={`mt-[65px] ml-[30px] cursor-pointer`}
+                              src={Trash}
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
               <button
+                onClick={AddNewItem}
                 type="button"
                 className={`w-full py-4 rounded-full font-bold transition-colors
                   ${
                     theme === "dark"
                       ? "bg-[#252945] text-gray-300 hover:bg-[#1E2139]"
                       : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                  }cursor-pointer`}
+                  } cursor-pointer`}
               >
                 + Add New Item
               </button>
@@ -293,7 +526,7 @@ function AddInvoice({ add, onClose }) {
                 Save as Draft
               </button>
               <button
-                type="submit"
+                onClick={postInvoice}
                 className="px-4 cursor-pointer md:px-6 py-4 rounded-full font-bold text-sm md:text-base text-white bg-[#7C5DFA] hover:bg-[#9277FF] transition-colors"
               >
                 Save & Send
@@ -302,6 +535,7 @@ function AddInvoice({ add, onClose }) {
           </div>
         </div>
       </div>
+      <Toaster richColors position="top-center" expand={false} />
     </div>
   );
 }

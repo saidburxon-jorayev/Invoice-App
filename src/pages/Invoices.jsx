@@ -4,14 +4,14 @@ import Add from "../images/add.svg";
 import InvoiceCard from "../components/InvoiceCard";
 import db from "../assets/data.json";
 import NotFound from "../images/not-found.svg";
-import useDeleteStore from "../store/useDeleteStore";
+import useAddStore from "../store/useAddStore";
 import AddInvoice from "../components/AddInvoice";
 
 function Invoices() {
   const [add, setAdd] = useState(false);
   const [filter, setFilter] = useState("filter");
   const { theme, setTheme } = useThemeStore();
-  const { invoices } = useDeleteStore();
+  const { invoices } = useAddStore();
   const [data, setData] = useState(invoices);
 
   useEffect(() => {

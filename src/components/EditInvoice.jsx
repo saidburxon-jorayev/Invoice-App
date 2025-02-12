@@ -4,12 +4,49 @@ import { ChevronDown } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import Trash from "../images/trash-can.svg";
 import useAddStore from "../store/useAddStore";
+import { useLocation } from "react-router-dom";
 
-function AddInvoice({ add, onClose }) {
+function EditInvoice({ add, onClose }) {
   const [item, setItem] = useState([]);
-  const { theme } = useThemeStore();
-  const { addInvoice, invoices } = useAddStore();
+  const [defInvoice, setDefInvoice] = useState({});
   const [isClosing, setIsClosing] = useState(false);
+  const [formData, setFormData] = useState({
+    id: generateId(),
+    senderStreet: "",
+    senderCity: "",
+    senderPostCode: "",
+    senderCountry: "",
+    clientName: "",
+    clientEmail: "",
+    clientStreet: "",
+    clientCity: "",
+    clientPostCode: "",
+    clientCountry: "",
+    invoiceDate: "",
+    paymentTerms: "1",
+    description: "",
+  });
+  const { invoices, updateInvoice } = useAddStore();
+  const { theme } = useThemeStore();
+  const location = useLocation();
+  const invoice = location.state?.invoice;
+
+  console.log(invoice);
+
+  useEffect(() => {
+    if (invoice) {
+      const prevInvo = invoices.find((prev) => prev.id == invoice.id);
+      if (prevInvo) {
+        setDefInvoice(prevInvo);
+        setFormData(prevInvo);
+      }
+    }
+  }, [invoice, invoices]);
+
+  function handleClose() {
+    setIsClosing(true);
+    setTimeout(onClose, 100);
+  }
 
   const error = (text) => {
     toast.error(text);
@@ -21,61 +58,61 @@ function AddInvoice({ add, onClose }) {
     }
   }, [add]);
 
-  function validate() {
-    if (formData.senderStreet.length <= 10) {
-      error("Street Address 10ta belgidan kam!");
-      return false;
-    }
-    if (formData.senderCity.length < 4) {
-      error("City Address 4ta belgidan kam!");
-      return false;
-    }
-    if (formData.senderPostCode.length < 6) {
-      error("Post Code 6ta belgidan kam!");
-      return false;
-    }
-    if (formData.senderCountry.length <= 3) {
-      error("Country 3ta belgidan kam!");
-      return false;
-    }
-    if (formData.clientName.length <= 2) {
-      error("Client Name 3ta belgidan kam!");
-      return false;
-    }
-    if (formData.clientEmail.length < 11) {
-      error("Client Email 11ta belgidan kam!");
-      return false;
-    }
-    if (formData.clientStreet.length <= 10) {
-      error("Street Address 10ta belgidan kam!");
-      return false;
-    }
-    if (formData.clientCity.length <= 3) {
-      error("City 3ta belgidan kam!");
-      return false;
-    }
-    if (formData.clientPostCode.length < 6) {
-      error("Post Code 6ta belgidan kam!");
-      return false;
-    }
-    if (formData.clientCountry.length < 2) {
-      error("Country 6ta belgidan kam!");
-      return false;
-    }
-    if (formData.senderPostCode.length < 6) {
-      error("Post Code 6ta belgidan kam!");
-      return false;
-    }
-    if (formData.description.length < 15) {
-      error("Description 15ta belgidan kam!");
-      return false;
-    }
-    if (formData.invoiceDate.length != 10) {
-      error("Iltimos Invoice Date kiriting!");
-      return false;
-    }
-    return true;
-  }
+  // function validate() {
+  //   if (formData.senderStreet.length <= 10) {
+  //     error("Street Address 10ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.senderCity.length < 4) {
+  //     error("City Address 4ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.senderPostCode.length < 6) {
+  //     error("Post Code 6ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.senderCountry.length <= 3) {
+  //     error("Country 3ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.clientName.length <= 2) {
+  //     error("Client Name 3ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.clientEmail.length < 11) {
+  //     error("Client Email 11ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.clientStreet.length <= 10) {
+  //     error("Street Address 10ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.clientCity.length <= 3) {
+  //     error("City 3ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.clientPostCode.length < 6) {
+  //     error("Post Code 6ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.clientCountry.length < 2) {
+  //     error("Country 6ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.senderPostCode.length < 6) {
+  //     error("Post Code 6ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.description.length < 15) {
+  //     error("Description 15ta belgidan kam!");
+  //     return false;
+  //   }
+  //   if (formData.invoiceDate.length != 10) {
+  //     error("Iltimos Invoice Date kiriting!");
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   function generateId() {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -109,87 +146,91 @@ function AddInvoice({ add, onClose }) {
   function handleItemChange(id, field, value) {
     setItem((prevItems) =>
       prevItems.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
+        item.id === id
+          ? {
+              ...item,
+              [field]:
+                field === "qty" || field === "price"
+                  ? parseFloat(value) || 0
+                  : value,
+            }
+          : item
       )
     );
   }
 
-  const [formData, setFormData] = useState({
-    id: generateId(),
-    senderStreet: "",
-    senderCity: "",
-    senderPostCode: "",
-    senderCountry: "",
-    clientName: "",
-    clientEmail: "",
-    clientStreet: "",
-    clientCity: "",
-    clientPostCode: "",
-    clientCountry: "",
-    invoiceDate: "",
-    paymentTerms: "1",
-    description: "",
-  });
+  // function postInvoice() {
+  //   const invoiceDate = formData.invoiceDate
+  //     ? new Date(formData.invoiceDate)
+  //     : new Date();
 
+  //   const paymentTerms = parseInt(formData.paymentTerms) || 1;
+
+  //   const paymentDue = new Date(invoiceDate);
+  //   paymentDue.setDate(paymentDue.getDate() + paymentTerms);
+
+  //   const formattedInvoiceDate = invoiceDate.toISOString().split("T")[0];
+  //   const formattedPaymentDue = paymentDue.toISOString().split("T")[0];
+
+  //   const validItems = Array.isArray(item) ? item : [];
+
+  //   const itemsTotal = validItems.reduce(
+  //     (sum, item) => sum + (item.qty || 0) * (item.price || 0),
+  //     0
+  //   );
+
+  //   const transformedData = {
+  //     id: formData.id,
+  //     createdAt: formattedInvoiceDate,
+  //     paymentDue: formattedPaymentDue,
+  //     description: formData.description,
+  //     paymentTerms: paymentTerms,
+  //     clientName: formData.clientName,
+  //     clientEmail: formData.clientEmail,
+  //     status: "pending",
+  //     senderAddress: {
+  //       street: formData.senderStreet,
+  //       city: formData.senderCity,
+  //       postCode: formData.senderPostCode,
+  //       country: formData.senderCountry,
+  //     },
+  //     clientAddress: {
+  //       street: formData.clientStreet,
+  //       city: formData.clientCity,
+  //       postCode: formData.clientPostCode,
+  //       country: formData.clientCountry,
+  //     },
+  //     items: validItems.map((item) => ({
+  //       name: item.name || "",
+  //       quantity: item.qty || 0,
+  //       price: item.price || 0,
+  //       total: (item.qty || 0) * (item.price || 0),
+  //     })),
+  //     total: itemsTotal,
+  //   };
+
+  //   updateInvoice(invoice.id, transformedData);
+
+  //   console.log("Invoice Date:", formattedInvoiceDate);
+  //   console.log("Payment Due Date:", formattedPaymentDue);
+  //   console.log("Transformed Data:", transformedData);
+
+  //   handleClose();
+  // }
   function postInvoice() {
-    const isValid = validate();
-    if (!isValid) {
-      return;
-    }
-
-    const invoiceDate = formData.invoiceDate
-      ? new Date(formData.invoiceDate)
-      : new Date();
-
-    const paymentTerms = parseInt(formData.paymentTerms) || 1;
-
-    const paymentDue = new Date(invoiceDate);
-    paymentDue.setDate(paymentDue.getDate() + paymentTerms);
-
-    const formattedInvoiceDate = invoiceDate.toISOString().split("T")[0];
-    const formattedPaymentDue = paymentDue.toISOString().split("T")[0];
-
-    const itemsTotal = item.reduce(
-      (sum, item) => sum + item.qty * item.price,
-      0
-    );
+    const invoiceId = invoice ? invoice.id : generateId();
 
     const transformedData = {
-      id: formData.id,
-      createdAt: formattedInvoiceDate,
-      paymentDue: formattedPaymentDue,
-      description: formData.description,
-      paymentTerms: paymentTerms,
-      clientName: formData.clientName,
-      clientEmail: formData.clientEmail,
-      status: "pending",
-      senderAddress: {
-        street: formData.senderStreet,
-        city: formData.senderCity,
-        postCode: formData.senderPostCode,
-        country: formData.senderCountry,
-      },
-      clientAddress: {
-        street: formData.clientStreet,
-        city: formData.clientCity,
-        postCode: formData.clientPostCode,
-        country: formData.clientCountry,
-      },
-      items: item.map((item) => ({
-        name: item.name,
-        quantity: item.qty,
-        price: item.price,
-        total: item.qty * item.price,
+      ...formData,
+      id: invoiceId,
+      items: item.map((itm) => ({
+        ...itm,
+        total: itm.qty * itm.price,
       })),
-      total: itemsTotal,
+      total: item.reduce((sum, itm) => sum + itm.qty * itm.price, 0),
     };
 
-    addInvoice(transformedData);
-
-    console.log("Invoice Date:", formattedInvoiceDate);
-    console.log("Payment Due Date:", formattedPaymentDue);
-    console.log("Transformed Data:", transformedData);
-
+    updateInvoice(invoiceId, transformedData);
     handleClose();
   }
 
@@ -239,7 +280,7 @@ function AddInvoice({ add, onClose }) {
                   <label className={getLabelClass()}>Street Address</label>
                   <input
                     name="senderStreet"
-                    value={formData.senderStreet}
+                    defaultValue={invoice.senderAddress.street}
                     onChange={handleChange}
                     className={getInputClass()}
                   />
@@ -250,7 +291,7 @@ function AddInvoice({ add, onClose }) {
                     <label className={getLabelClass()}>City</label>
                     <input
                       name="senderCity"
-                      value={formData.senderCity}
+                      defaultValue={invoice.senderAddress.city}
                       onChange={handleChange}
                       className={getInputClass()}
                     />
@@ -259,7 +300,7 @@ function AddInvoice({ add, onClose }) {
                     <label className={getLabelClass()}>Post Code</label>
                     <input
                       name="senderPostCode"
-                      value={formData.senderPostCode}
+                      defaultValue={invoice.senderAddress.postCode}
                       onChange={handleChange}
                       className={getInputClass()}
                     />
@@ -268,7 +309,7 @@ function AddInvoice({ add, onClose }) {
                     <label className={getLabelClass()}>Country</label>
                     <input
                       name="senderCountry"
-                      value={formData.senderCountry}
+                      defaultValue={invoice.senderAddress.country}
                       onChange={handleChange}
                       className={getInputClass()}
                     />
@@ -287,7 +328,7 @@ function AddInvoice({ add, onClose }) {
                   <label className={getLabelClass()}>Client's Name</label>
                   <input
                     name="clientName"
-                    value={formData.clientName}
+                    defaultValue={invoice.clientName}
                     onChange={handleChange}
                     className={getInputClass()}
                   />
@@ -298,7 +339,7 @@ function AddInvoice({ add, onClose }) {
                   <input
                     name="clientEmail"
                     type="email"
-                    value={formData.clientEmail}
+                    defaultValue={invoice.clientEmail}
                     onChange={handleChange}
                     className={getInputClass()}
                   />
@@ -308,7 +349,7 @@ function AddInvoice({ add, onClose }) {
                   <label className={getLabelClass()}>Street Address</label>
                   <input
                     name="clientStreet"
-                    value={formData.clientStreet}
+                    defaultValue={invoice.clientAddress.street}
                     onChange={handleChange}
                     className={getInputClass()}
                   />
@@ -319,7 +360,7 @@ function AddInvoice({ add, onClose }) {
                     <label className={getLabelClass()}>City</label>
                     <input
                       name="clientCity"
-                      value={formData.clientCity}
+                      defaultValue={invoice.clientAddress.city}
                       onChange={handleChange}
                       className={getInputClass()}
                     />
@@ -328,7 +369,7 @@ function AddInvoice({ add, onClose }) {
                     <label className={getLabelClass()}>Post Code</label>
                     <input
                       name="clientPostCode"
-                      value={formData.clientPostCode}
+                      defaultValue={invoice.clientAddress.postCode}
                       onChange={handleChange}
                       className={getInputClass()}
                     />
@@ -337,7 +378,7 @@ function AddInvoice({ add, onClose }) {
                     <label className={getLabelClass()}>Country</label>
                     <input
                       name="clientCountry"
-                      value={formData.clientCountry}
+                      defaultValue={invoice.clientAddress.country}
                       onChange={handleChange}
                       className={getInputClass()}
                     />
@@ -353,7 +394,7 @@ function AddInvoice({ add, onClose }) {
                   <input
                     type="date"
                     name="invoiceDate"
-                    value={formData.invoiceDate}
+                    defaultValue={invoice.invoiceDate}
                     onChange={handleChange}
                     className={`${getInputClass()}`}
                   />
@@ -365,7 +406,7 @@ function AddInvoice({ add, onClose }) {
                 <div className="relative">
                   <select
                     name="paymentTerms"
-                    value={formData.paymentTerms}
+                    defaultValue={invoice.paymentTerms}
                     onChange={handleChange}
                     className={`${getInputClass()} appearance-none`}
                   >
@@ -386,7 +427,7 @@ function AddInvoice({ add, onClose }) {
               <label className={getLabelClass()}>Project Description</label>
               <input
                 name="description"
-                value={formData.description}
+                defaultValue={invoice.description}
                 onChange={handleChange}
                 placeholder="e.g. Graphic Design Service"
                 className={getInputClass()}
@@ -402,10 +443,10 @@ function AddInvoice({ add, onClose }) {
                 Item List
               </h2>
 
-              {item.length > 0 &&
-                item.map((value) => {
+              {invoice?.items.length > 0 &&
+                invoice?.items.map((value, index) => {
                   return (
-                    <div key={value.id} className="mb-[48px]">
+                    <div key={index} className="mb-[48px]">
                       <div className="flex flex-col flex-wrap">
                         <div className="flex flex-col">
                           <label className={getLabelClass()} htmlFor="item">
@@ -413,7 +454,7 @@ function AddInvoice({ add, onClose }) {
                           </label>
                           <input
                             type="text"
-                            value={value.name}
+                            defaultValue={value.name}
                             onChange={(e) =>
                               handleItemChange(value.id, "name", e.target.value)
                             }
@@ -432,7 +473,7 @@ function AddInvoice({ add, onClose }) {
                             </label>
                             <input
                               type="number"
-                              value={value.qty}
+                              defaultValue={value.quantity}
                               onChange={(e) =>
                                 handleItemChange(
                                   value.id,
@@ -454,7 +495,7 @@ function AddInvoice({ add, onClose }) {
                             </label>
                             <input
                               type="number"
-                              value={value.price}
+                              defaultValue={value.price}
                               onChange={(e) =>
                                 handleItemChange(
                                   value.id,
@@ -477,7 +518,7 @@ function AddInvoice({ add, onClose }) {
                             <p
                               className={`${getLabelClass()} mt-[27px] truncate`}
                             >
-                              {(value.qty * value.price).toFixed(2)}
+                              {value.total}
                             </p>
                           </div>
                           <div className="delete">
@@ -552,4 +593,4 @@ function AddInvoice({ add, onClose }) {
   );
 }
 
-export default AddInvoice;
+export default EditInvoice;

@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useThemeStore from "../store/useThemeStore";
 import Back from "../images/back.svg";
 import useAddStore from "../store/useAddStore";
+import EditInvoice from "../components/EditInvoice";
 
 function InvoicesD() {
-  const [edit, setEdit] = useState(false);
+  const [add, setAdd] = useState(false);
   const [modal, setModal] = useState(false);
   const [status, setStatus] = useState("");
   const { theme } = useThemeStore();
@@ -13,8 +14,6 @@ function InvoicesD() {
   const location = useLocation();
   const invoice = location.state?.invoice;
   const navigate = useNavigate();
-
-  console.log(invoice.paymentDue);
 
   function handleDelete(id) {
     deleteInvoice(id);
@@ -93,7 +92,7 @@ function InvoicesD() {
           </div>
           <div className="hidden sm:flex  items-center gap-[30px]">
             <button
-              onClick={() => setEdit(true)}
+              onClick={() => setAdd(true)}
               className={`${
                 theme == "dark"
                   ? "text-[#DFE3FA] bg-[#252945] "
@@ -312,6 +311,7 @@ function InvoicesD() {
           } mt-[56px] py-[21px] flex items-center rounded-[8px] justify-between sm:hidden`}
         >
           <button
+            onClick={() => setEdit(true)}
             className={`${
               theme == "dark"
                 ? "text-[#DFE3FA] bg-[#252945] "
@@ -380,6 +380,14 @@ function InvoicesD() {
             </div>
           </div>
         </div>
+      )}
+      {add == true && (
+        <EditInvoice
+          add={add}
+          onClose={() => {
+            setAdd(false);
+          }}
+        />
       )}
     </div>
   );

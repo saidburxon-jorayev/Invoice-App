@@ -103,7 +103,7 @@ function AddInvoice({ add, onClose }) {
   }
 
   function AddNewItem() {
-    setItem([...item, { name: "", qty: "", price: "", id: Date.now() }]);
+    setItem([...item, { name: "", qty: "1", price: "", id: Date.now() }]);
   }
 
   function handleItemChange(id, field, value) {
@@ -130,15 +130,24 @@ function AddInvoice({ add, onClose }) {
     paymentTerms: "1",
     description: "",
   });
+
   function postInvoice() {
     const isValid = validate();
     if (!isValid) {
       return;
     }
 
-    const invoiceDate = new Date(formData.invoiceDate);
+    const invoiceDate = formData.invoiceDate
+      ? new Date(formData.invoiceDate)
+      : new Date();
+
+    const paymentTerms = parseInt(formData.paymentTerms) || 1;
+
     const paymentDue = new Date(invoiceDate);
-    paymentDue.setDate(paymentDue.getDate() + parseInt(formData.paymentTerms));
+    paymentDue.setDate(paymentDue.getDate() + paymentTerms);
+
+    const formattedInvoiceDate = invoiceDate.toISOString().split("T")[0];
+    const formattedPaymentDue = paymentDue.toISOString().split("T")[0];
 
     const itemsTotal = item.reduce(
       (sum, item) => sum + item.qty * item.price,
@@ -147,10 +156,10 @@ function AddInvoice({ add, onClose }) {
 
     const transformedData = {
       id: formData.id,
-      createdAt: formData.invoiceDate,
-      paymentDue: paymentDue,
+      createdAt: formattedInvoiceDate,
+      paymentDue: formattedPaymentDue,
       description: formData.description,
-      paymentTerms: parseInt(formData.paymentTerms),
+      paymentTerms: paymentTerms,
       clientName: formData.clientName,
       clientEmail: formData.clientEmail,
       status: "pending",
@@ -176,9 +185,12 @@ function AddInvoice({ add, onClose }) {
     };
 
     addInvoice(transformedData);
-    console.log(transformedData);
-    console.log(invoices);
-    console.log(generateId());
+
+    console.log("Invoice Date:", formattedInvoiceDate);
+    console.log("Payment Due Date:", formattedPaymentDue);
+    console.log("Transformed Data:", transformedData);
+
+    handleClose();
   }
 
   function handleChange(e) {

@@ -2,27 +2,23 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useThemeStore from "../store/useThemeStore";
 import Back from "../images/back.svg";
-import useDeleteStore from "../store/useDeleteStore";
-import { Toaster, toast } from "sonner";
+import useAddStore from "../store/useAddStore";
 
 function InvoicesD() {
   const [modal, setModal] = useState(false);
   const [status, setStatus] = useState("");
   const { theme } = useThemeStore();
-  const { deleteInvoice, invoices } = useDeleteStore();
+  const { deleteInvoice } = useAddStore();
   const location = useLocation();
   const invoice = location.state?.invoice;
   const navigate = useNavigate();
 
-  const deleted = () => {
-    toast.error("Invoice has been deleted!");
-  };
+  console.log(invoice.paymentDue);
 
   function handleDelete(id) {
     deleteInvoice(id);
     setModal(false);
     navigate("/");
-    deleted("Invoice has been deleted");
   }
 
   function handleChangeStatus() {
@@ -282,7 +278,7 @@ function InvoicesD() {
                             theme == "dark" ? "text-white" : "text-[#0C0E16]"
                           } font-bold text-[12px]`}
                         >
-                          £ {value.total.toFixed(2)}
+                          £ {value.total}
                         </h2>
                       </div>
                     </div>
@@ -330,14 +326,15 @@ function InvoicesD() {
           >
             Delete
           </button>
-          {invoice.status != "paid" && (
-            <button
-              onClick={() => handleChangeStatus(invoice.status)}
-              className="px-[23px] cursor-pointer py-[17px] rounded-[24px] font-bold text-12px hover:bg-[#9277FF] bg-[#7C5DFA] text-white"
-            >
-              Mark as Paid
-            </button>
-          )}
+          {invoice.status == "pending" ||
+            ("draft" && (
+              <button
+                onClick={() => handleChangeStatus(invoice.status)}
+                className="px-[23px] cursor-pointer py-[17px] rounded-[24px] font-bold text-12px hover:bg-[#9277FF] bg-[#7C5DFA] text-white"
+              >
+                Mark as Paid
+              </button>
+            ))}
         </div>
       </div>
       {modal === true && (
@@ -382,7 +379,6 @@ function InvoicesD() {
           </div>
         </div>
       )}
-      <Toaster expand={false} richColors position="top-center" />
     </div>
   );
 }

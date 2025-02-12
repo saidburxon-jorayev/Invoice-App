@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import useThemeStore from "../store/useThemeStore";
 import Add from "../images/add.svg";
 import InvoiceCard from "../components/InvoiceCard";
-import db from "../assets/data.json";
 import NotFound from "../images/not-found.svg";
-import useAddStore from "../store/useAddStore";
 import AddInvoice from "../components/AddInvoice";
+import useAddStore from "../store/useAddStore";
 
 function Invoices() {
   const [add, setAdd] = useState(false);
   const [filter, setFilter] = useState("filter");
-  const { theme, setTheme } = useThemeStore();
+  const { theme } = useThemeStore();
   const { invoices } = useAddStore();
   const [data, setData] = useState(invoices);
 
@@ -18,9 +17,9 @@ function Invoices() {
     if (filter === "filter") {
       setData(invoices);
     } else {
-      setData(db.filter((prev) => prev.status === filter));
+      setData(invoices.filter((prev) => prev.status === filter));
     }
-  }, [filter]);
+  }, [filter, invoices]);
 
   return (
     <div className="contma relative">
@@ -77,8 +76,8 @@ function Invoices() {
       {invoices.length == 0 && (
         <div className="flex flex-col items-center justify-center text-center">
           <div className="top-content">
-            <div className="flex items-end justify-between xl:gap-[267px]">
-              <div className="mt-[34px] pl-[24px]">
+            <div className="flex  items-end justify-between xl:gap-[267px]">
+              <div className="mt-[34px] pl-[24px] animation-left">
                 <h1
                   className={`${
                     theme == "dark" ? "text-white" : "text-black"
@@ -91,10 +90,10 @@ function Invoices() {
                     theme == "dark" ? "text-[#DFE3FA]" : "text-[#888EB0]"
                   } font-normal mt-[4px]`}
                 >
-                  {data.length} invoices
+                  {invoices.length} invoices
                 </p>
               </div>
-              <div className="flex items-center mb-[10px] gap-[18px] pr-[24px]">
+              <div className="flex items-center mb-[10px] gap-[18px] pr-[24px] animation-right">
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
@@ -107,9 +106,12 @@ function Invoices() {
                   <option value="pending">Pending</option>
                   <option value="draft">Draft</option>
                 </select>
-                <button className="truncate active:scale-90 transition-all flex items-center p-[6px] hover:bg-[#9277FF] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer">
+                <button
+                  onClick={() => setAdd(true)}
+                  className="truncate active:scale-90 transition-all flex items-center p-[6px] hover:bg-[#9277FF] bg-[#7C5DFA] text-white gap-[8px] rounded-3xl cursor-pointer"
+                >
                   <img src={Add} alt="add" />
-                  New
+                  New <span className="hidden sm:block">Invoice</span>
                 </button>
               </div>
             </div>

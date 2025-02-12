@@ -5,6 +5,7 @@ import Back from "../images/back.svg";
 import useAddStore from "../store/useAddStore";
 
 function InvoicesD() {
+  const [edit, setEdit] = useState(false);
   const [modal, setModal] = useState(false);
   const [status, setStatus] = useState("");
   const { theme } = useThemeStore();
@@ -92,6 +93,7 @@ function InvoicesD() {
           </div>
           <div className="hidden sm:flex  items-center gap-[30px]">
             <button
+              onClick={() => setEdit(true)}
               className={`${
                 theme == "dark"
                   ? "text-[#DFE3FA] bg-[#252945] "

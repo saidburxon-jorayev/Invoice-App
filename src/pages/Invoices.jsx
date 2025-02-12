@@ -116,31 +116,33 @@ function Invoices() {
               </div>
             </div>
           </div>
-          <img src={NotFound} className="mt-[210px]" alt="notfound" />
-          <div className="text-center">
-            <h1
-              className={`${
-                theme == "dark" ? "text-[#fff]" : "text-[#0C0E16]"
-              } font-bold text-[20px] mt-[64px] mb-[24px]`}
-            >
-              There is nothing here
-            </h1>
-            <p
-              className={`${
-                theme == "dark" ? "text-[#fff]" : "text-[#0C0E16]"
-              } font-normal text-[12px] w-[180px]`}
-            >
-              Create an invoice by clicking the
-              <span
-                className={`text-[#DFE3FA] font-bold text-[12px] ${
-                  theme == "dark" ? "" : "text-[#888EB0]"
-                }`}
+          <div className="animation">
+            <img src={NotFound} className="mt-[210px]" alt="notfound" />
+            <div className="text-center">
+              <h1
+                className={`${
+                  theme == "dark" ? "text-[#fff]" : "text-[#0C0E16]"
+                } font-bold text-[20px] mt-[64px] mb-[24px]`}
               >
-                {" "}
-                New button{" "}
-              </span>
-              and get started
-            </p>
+                There is nothing here
+              </h1>
+              <p
+                className={`${
+                  theme == "dark" ? "text-[#fff]" : "text-[#0C0E16]"
+                } font-normal text-[12px] w-[180px]`}
+              >
+                Create an invoice by clicking the
+                <span
+                  className={`text-[#DFE3FA] font-bold text-[12px] ${
+                    theme == "dark" ? "" : "text-[#888EB0]"
+                  }`}
+                >
+                  {" "}
+                  New button{" "}
+                </span>
+                and get started
+              </p>
+            </div>
           </div>
         </div>
       )}

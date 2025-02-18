@@ -1,6 +1,6 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Invoice App",
+  "short_name": "Invoice",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

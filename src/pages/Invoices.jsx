@@ -39,7 +39,7 @@ function Invoices() {
                   theme == "dark" ? "text-[#DFE3FA]" : "text-[#888EB0]"
                 } font-normal mt-[4px]`}
               >
-                {invoices.length} invoices
+                There are {invoices.length} total invoices
               </p>
             </div>
             <div className="flex items-center mb-[10px] gap-[18px] pr-[24px] animation-right">

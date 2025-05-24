@@ -30,11 +30,13 @@ function InvoicesD() {
     <div className="contma">
       <div className="contma px-[24px]">
         <div className="flex gap-[23px] pl-[24px] items-center mt-[32px]">
-          <img src={Back} alt="arrow left" />
           <Link
             to="/"
-            className={`${theme == "dark" ? "text-white" : "text-black"}`}
+            className={`${
+              theme == "dark" ? "text-white" : "text-black"
+            } flex gap-[23px]`}
           >
+            <img src={Back} alt="arrow left" />
             Go back
           </Link>
         </div>
@@ -359,7 +361,7 @@ function InvoicesD() {
               Confirm Deletion
             </h1>
             <p className="text-[12px] text-[#888EB0]">
-              Are you sure you want to delete invoice #XM9141? This action
+              Are you sure you want to delete invoice {invoice.id}? This action
               cannot be undone.
             </p>
             <div className="flex justify-end gap-2 mt-[16px] mb:mb-[48px] mb-[32px]">

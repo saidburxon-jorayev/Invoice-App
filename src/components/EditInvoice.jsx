@@ -58,65 +58,65 @@ function EditInvoice({ add, onClose }) {
     }
   }, [add]);
 
-  // function validate() {
-  //   if (formData.senderStreet.length <= 10) {
-  //     error("Street Address 10ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.senderCity.length < 4) {
-  //     error("City Address 4ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.senderPostCode.length < 6) {
-  //     error("Post Code 6ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.senderCountry.length <= 3) {
-  //     error("Country 3ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.clientName.length <= 2) {
-  //     error("Client Name 3ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.clientEmail.length < 11) {
-  //     error("Client Email 11ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.clientStreet.length <= 10) {
-  //     error("Street Address 10ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.clientCity.length <= 3) {
-  //     error("City 3ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.clientPostCode.length < 6) {
-  //     error("Post Code 6ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.clientCountry.length < 2) {
-  //     error("Country 6ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.senderPostCode.length < 6) {
-  //     error("Post Code 6ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.description.length < 15) {
-  //     error("Description 15ta belgidan kam!");
-  //     return false;
-  //   }
-  //   if (formData.invoiceDate.length != 10) {
-  //     error("Iltimos Invoice Date kiriting!");
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  function validate() {
+    if (formData.senderStreet.length <= 10) {
+      error("Street Address 10ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderCity.length < 4) {
+      error("City Address 4ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderPostCode.length < 6) {
+      error("Post Code 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderCountry.length <= 3) {
+      error("Country 3ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientName.length <= 2) {
+      error("Client Name 3ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientEmail.length < 11) {
+      error("Client Email 11ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientStreet.length <= 10) {
+      error("Street Address 10ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientCity.length <= 3) {
+      error("City 3ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientPostCode.length < 6) {
+      error("Post Code 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.clientCountry.length < 2) {
+      error("Country 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.senderPostCode.length < 6) {
+      error("Post Code 6ta belgidan kam!");
+      return false;
+    }
+    if (formData.description.length < 15) {
+      error("Description 15ta belgidan kam!");
+      return false;
+    }
+    if (formData.invoiceDate.length != 10) {
+      error("Iltimos Invoice Date kiriting!");
+      return false;
+    }
+    return true;
+  }
 
   function generateId() {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const numbers = "12345678910";
+    const numbers = "1234567890";
     let id = "";
 
     for (let i = 0; i < 6; i++) {
@@ -159,66 +159,12 @@ function EditInvoice({ add, onClose }) {
     );
   }
 
-  // function postInvoice() {
-  //   const invoiceDate = formData.invoiceDate
-  //     ? new Date(formData.invoiceDate)
-  //     : new Date();
-
-  //   const paymentTerms = parseInt(formData.paymentTerms) || 1;
-
-  //   const paymentDue = new Date(invoiceDate);
-  //   paymentDue.setDate(paymentDue.getDate() + paymentTerms);
-
-  //   const formattedInvoiceDate = invoiceDate.toISOString().split("T")[0];
-  //   const formattedPaymentDue = paymentDue.toISOString().split("T")[0];
-
-  //   const validItems = Array.isArray(item) ? item : [];
-
-  //   const itemsTotal = validItems.reduce(
-  //     (sum, item) => sum + (item.qty || 0) * (item.price || 0),
-  //     0
-  //   );
-
-  //   const transformedData = {
-  //     id: formData.id,
-  //     createdAt: formattedInvoiceDate,
-  //     paymentDue: formattedPaymentDue,
-  //     description: formData.description,
-  //     paymentTerms: paymentTerms,
-  //     clientName: formData.clientName,
-  //     clientEmail: formData.clientEmail,
-  //     status: "pending",
-  //     senderAddress: {
-  //       street: formData.senderStreet,
-  //       city: formData.senderCity,
-  //       postCode: formData.senderPostCode,
-  //       country: formData.senderCountry,
-  //     },
-  //     clientAddress: {
-  //       street: formData.clientStreet,
-  //       city: formData.clientCity,
-  //       postCode: formData.clientPostCode,
-  //       country: formData.clientCountry,
-  //     },
-  //     items: validItems.map((item) => ({
-  //       name: item.name || "",
-  //       quantity: item.qty || 0,
-  //       price: item.price || 0,
-  //       total: (item.qty || 0) * (item.price || 0),
-  //     })),
-  //     total: itemsTotal,
-  //   };
-
-  //   updateInvoice(invoice.id, transformedData);
-
-  //   console.log("Invoice Date:", formattedInvoiceDate);
-  //   console.log("Payment Due Date:", formattedPaymentDue);
-  //   console.log("Transformed Data:", transformedData);
-
-  //   handleClose();
-  // }
   function postInvoice() {
     const invoiceId = invoice ? invoice.id : generateId();
+
+    if (!validate()) {
+      return;
+    }
 
     const transformedData = {
       ...formData,

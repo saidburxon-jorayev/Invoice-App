@@ -77,6 +77,68 @@ function AddInvoice({ add, onClose }) {
     return true;
   }
 
+  function saveAsDraft() {
+    const isValid = validate();
+    if (!isValid) {
+      return;
+    }
+
+    const invoiceDate = formData.invoiceDate
+      ? new Date(formData.invoiceDate)
+      : new Date();
+
+    const paymentTerms = parseInt(formData.paymentTerms) || 1;
+
+    const paymentDue = new Date(invoiceDate);
+    paymentDue.setDate(paymentDue.getDate() + paymentTerms);
+
+    const formattedInvoiceDate = invoiceDate.toISOString().split("T")[0];
+    const formattedPaymentDue = paymentDue.toISOString().split("T")[0];
+
+    const itemsTotal = item.reduce(
+      (sum, item) => sum + item.qty * item.price,
+      0
+    );
+
+    const transformedData = {
+      id: formData.id,
+      createdAt: formattedInvoiceDate,
+      paymentDue: formattedPaymentDue,
+      description: formData.description,
+      paymentTerms: paymentTerms,
+      clientName: formData.clientName,
+      clientEmail: formData.clientEmail,
+      status: "draft",
+      senderAddress: {
+        street: formData.senderStreet,
+        city: formData.senderCity,
+        postCode: formData.senderPostCode,
+        country: formData.senderCountry,
+      },
+      clientAddress: {
+        street: formData.clientStreet,
+        city: formData.clientCity,
+        postCode: formData.clientPostCode,
+        country: formData.clientCountry,
+      },
+      items: item.map((item) => ({
+        name: item.name,
+        quantity: item.qty,
+        price: item.price,
+        total: item.qty * item.price,
+      })),
+      total: itemsTotal,
+    };
+
+    addInvoice(transformedData);
+
+    console.log("Invoice Date:", formattedInvoiceDate);
+    console.log("Payment Due Date:", formattedPaymentDue);
+    console.log("Transformed Data:", transformedData);
+
+    handleClose();
+  }
+
   function generateId() {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const numbers = "12345678910";
@@ -527,6 +589,7 @@ function AddInvoice({ add, onClose }) {
 
             <div className="flex items-center gap-2 md:gap-4">
               <button
+                onClick={saveAsDraft}
                 type="button"
                 className={`px-4 md:px-6 py-4 rounded-full font-bold text-sm md:text-base transition-colors
                   ${
